@@ -12,14 +12,14 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Counters {
+public class CountersProvider {
 
     private final Counter evtReceived;
     private final Counter evtAttempt;
     private final Counter evtSent;
     private final Counter evtFailed;
 
-    public Counters(MeterRegistry registry) {
+    public CountersProvider(MeterRegistry registry) {
         evtReceived = registry.counter("evt-received");
         evtAttempt = registry.counter("evt-attempt");
         evtSent = registry.counter("evt-sent");

@@ -17,15 +17,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CountersTest {
+class CountersProviderTest {
 
     @Mock
     private MeterRegistry registry;
+
     private Counter evtReceivedStub;
     private Counter evtAttemptStub;
     private Counter evtSentStub;
     private Counter evtFailedStub;
-    private Counters counters;
+    private CountersProvider countersProvider;
 
     @BeforeEach
     void setUp() {
@@ -38,30 +39,30 @@ class CountersTest {
         evtFailedStub = getCounter("evt-failed");
         when(registry.counter("evt-failed")).thenReturn(evtFailedStub);
 
-        this.counters = new Counters(registry);
+        this.countersProvider = new CountersProvider(registry);
     }
 
     @Test
     void shouldReturnCorrectCounterWhenEventReceivedCounterIsExpected() {
-        Counter counter = counters.evtReceived();
+        Counter counter = countersProvider.evtReceived();
         assertEquals(evtReceivedStub, counter);
     }
 
     @Test
     void shouldReturnCorrectCounterWhenEventAttemptCounterIsExpected() {
-        Counter counter = counters.evtAttempt();
+        Counter counter = countersProvider.evtAttempt();
         assertEquals(evtAttemptStub, counter);
     }
 
     @Test
     void shouldReturnCorrectCounterWhenEventSentCounterIsExpected() {
-        Counter counter = counters.evtSent();
+        Counter counter = countersProvider.evtSent();
         assertEquals(evtSentStub, counter);
     }
 
     @Test
     void shouldReturnCorrectCounterWhenEventFailedCounterIsExpected() {
-        Counter counter = counters.evtFailed();
+        Counter counter = countersProvider.evtFailed();
         assertEquals(evtFailedStub, counter);
     }
 
