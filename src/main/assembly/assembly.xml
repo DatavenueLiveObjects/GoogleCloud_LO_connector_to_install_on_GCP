@@ -14,11 +14,11 @@
 			<outputDirectory>conf</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}/mqtt2sqs-assemble/bin</directory>
+			<directory>${project.build.directory}/lo2pubsub-assemble/bin</directory>
 			<outputDirectory>bin</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}/mqtt2sqs-assemble/lib</directory>
+			<directory>${project.build.directory}/lo2pubsub-assemble/lib</directory>
 			<outputDirectory>lib</outputDirectory>
 		</fileSet>
 		<fileSet> <!-- Create empty directory -->

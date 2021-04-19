@@ -1,15 +1,18 @@
-lo-mqtt:
+lo:
   hostname: liveobjects.orange-business.com
-  username: application
   api-key: YOUR_API_KEY
+  connection-timeout: 30000
   topics:
     - MESSAGES_TOPIC_1
     - MESSAGES_TOPIC_2
-  recovery-interval: 10000
-  completion-timeout: 20000
-  connection-timeout: 30000
-  qos: 1
-  keep-alive-interval-seconds: 30  
+  message-qos: 1
+  synchronization-interval: 60000
+  mqtt-persistence-dir: ${basedir:.}/temp/
+  keep-alive-interval-seconds: 30
+  message-batch-size: 10
+  task-queue-size: 150000
+  thread-pool-size: 40
+  keep-alive-time: 10
 
 google:
   pub-sub:
@@ -18,6 +21,13 @@ google:
     auth-file: credentials/auth.json
     message-batch-size: 10
     message-sending-fixed-delay: 1000
+    initial-retry-delay: 100
+    retry-delay-multiplier: 1.3
+    max-retry-delay: 60000
+    initial-rpc-timeout: 5000
+    rpc-timeout-multiplier: 1.0
+    max-rpc-timeout: 600000
+    total-timeout: 600000
 
 management:
   endpoints:
