@@ -14,6 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -87,6 +88,7 @@ class LoMqttSynchronizationServiceTest {
         when(properties.getMessageBatchSize()).thenReturn(batchSize);
 
         Queue<String> messageQueue = getExampleMessageQueue(batchSize);
+        List<String> expectedMessages = new ArrayList<>(messageQueue);
 
         prepareService(messageQueue);
 
@@ -94,7 +96,7 @@ class LoMqttSynchronizationServiceTest {
         service.synchronize();
 
         // then
-        List<String> expectedMessages = new ArrayList<>(messageQueue);
+
         List<SynchronizationTask> expectedTasks = Collections.singletonList(
                 new SynchronizationTask(pubSubMessageSender, expectedMessages)
         );
@@ -111,14 +113,15 @@ class LoMqttSynchronizationServiceTest {
 
         Queue<String> messageQueue = getExampleMessageQueue(totalLength);
 
+        List<String> expectedMessages1 = (new LinkedList<>(messageQueue)).subList(0, batchSize);
+        List<String> expectedMessages2 = (new LinkedList<>(messageQueue)).subList(batchSize, totalLength);
+
         prepareService(messageQueue);
 
         // when
         service.synchronize();
 
         // then
-        List<String> expectedMessages1 = (new LinkedList<>(messageQueue)).subList(0, batchSize);
-        List<String> expectedMessages2 = (new LinkedList<>(messageQueue)).subList(batchSize, totalLength);
         List<SynchronizationTask> expectedTasks = Arrays.asList(
                 new SynchronizationTask(pubSubMessageSender, expectedMessages1),
                 new SynchronizationTask(pubSubMessageSender, expectedMessages2)
@@ -135,6 +138,7 @@ class LoMqttSynchronizationServiceTest {
         int expectedBatchSize = 10;
 
         Queue<String> messageQueue = getExampleMessageQueue(expectedBatchSize);
+        List<String> expectedMessages = (new LinkedList<>(messageQueue)).subList(0, expectedBatchSize);
 
         prepareService(messageQueue);
 
@@ -142,13 +146,29 @@ class LoMqttSynchronizationServiceTest {
         service.synchronize();
 
         // then
-        List<String> expectedMessages = (new LinkedList<>(messageQueue)).subList(0, expectedBatchSize);
-
         List<SynchronizationTask> expectedTasks = Collections.singletonList(
                 new SynchronizationTask(pubSubMessageSender, expectedMessages)
         );
         verify(threadPoolExecutor, times(1)).invokeAll(expectedTasks);
         verify(threadPoolExecutor, never()).invokeAll(not(eq(expectedTasks)));
+    }
+
+    @Test
+    public void shouldClearQueueAfterMessagesSend() throws InterruptedException {
+        // given
+        int batchSize = 5;
+
+        when(properties.getMessageBatchSize()).thenReturn(batchSize);
+
+        Queue<String> messageQueue = getExampleMessageQueue(batchSize);
+
+        prepareService(messageQueue);
+
+        // when
+        service.synchronize();
+
+        // then
+        assertEquals(0, messageQueue.size());
     }
 
     private Queue<String> getExampleMessageQueue(int batchSize) {

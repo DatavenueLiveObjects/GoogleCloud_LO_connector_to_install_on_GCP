@@ -82,6 +82,7 @@ public class LoMqttSynchronizationService {
 
             try {
                 threadPoolExecutor.invokeAll(tasks);
+                messageQueue.clear();
             } catch (InterruptedException e) {
                 LOG.error("Error in message synchronization process", e);
             }
