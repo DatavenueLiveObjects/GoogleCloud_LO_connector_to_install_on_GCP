@@ -7,11 +7,11 @@
 
 package com.orange.lo.sample.lo2pubsub;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Configuration
 public class ApplicationConfig {

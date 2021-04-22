@@ -4,10 +4,9 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="com.orange.lo.sample.mqtt2dis" level="DEBUG" />  
-    <logger name="com.bigdata.dis.sdk" level="ERROR" />
-    
+    <logger name="com.orange.lo.sample.lo2pubsub" level="DEBUG"/>
+
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

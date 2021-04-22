@@ -1,0 +1,30 @@
+lo:
+  hostname: test-hostname
+  api-key: test-api-key
+  topics:
+    - test-topic1
+    - test-topic2
+  synchronization-interval: 123
+  message-qos: 234
+  mqtt-persistence-dir: /tmp/test
+  keep-alive-interval-seconds: 345
+  connection-timeout: 456
+  message-batch-size: 567
+  task-queue-size: 678
+  thread-pool-size: 789
+  keep-alive-time: 890
+
+google:
+  pub-sub:
+    project-id: test-project
+    topic-id: test-topic
+    auth-file: test-auth-file.json
+    message-batch-size: 123
+    message-sending-fixed-delay: 234
+    initial-retry-delay: 345
+    retry-delay-multiplier: 1.2
+    max-retry-delay: 456
+    initial-rpc-timeout: 567
+    rpc-timeout-multiplier: 2.3
+    max-rpc-timeout: 678
+    total-timeout: 789
