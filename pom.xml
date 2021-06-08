@@ -137,14 +137,14 @@
                             <excludes>
                                 <exclude>application.yaml</exclude>
                                 <exclude>logback.xml</exclude>
-                                <exclude>sync.properties</exclude>
+                                <exclude>credentials/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>appassembler-maven-plugin</artifactId>
-                        <version>1.10</version>
+                        <version>2.1.0</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
