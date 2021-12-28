@@ -16,6 +16,8 @@ import java.util.List;
 @ConfigurationProperties(prefix = "lo")
 public class LoProperties {
 
+	private static final String CONNECTOR_TYPE = "LO_GCP_PUBSUB_ADAPTER";
+	
     private final String hostname;
     private final String apiKey;
     private final List<String> topics;
@@ -55,6 +57,10 @@ public class LoProperties {
         this.taskQueueSize = taskQueueSize;
         this.threadPoolSize = threadPoolSize;
         this.keepAliveTime = keepAliveTime;
+    }
+    
+    public String getConnectorType() {
+        return CONNECTOR_TYPE;
     }
 
     public String getHostname() {
