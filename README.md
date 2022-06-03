@@ -2,7 +2,8 @@
 * [General info](general-info)
 * [Technologies](technologies)
 * [Requirements](requirements)
-* [Building and installation](building-and-installation)
+* [Getting the installation package](#getting-the-installation-package)
+* [Installation](#installation)
 * [Configuration](configuration)
     * [Live objects side](live-objects-side)
     * [Google Cloud Platform](google-cloud-platform)
@@ -36,16 +37,29 @@ In order to run the connector you need to have:
 * **Google Cloud Platform account**
   * Service account private key
   * PubSub Service enabled
-* **Development tools**
+* **Development tools (only when building the package)**
    * Java and supporting IDE (e.g. IntelliJ, Eclipse)
    * Apache Maven
 
-## Building and installation
-In order to create an installation package, run the command:
+## Getting the installation package
+
+The installation package can be acquired in one of two ways:
+
+### Release
+
+It can be downloaded from https://github.com/DatavenueLiveObjects/GoogleCloud_LO_connector_to_install_on_GCP/releases
+
+### Building
+
+It can be created by running the command:
 ```
 mvn clean package -Prelease
 ```
-After running this command, the file  `mqtt2sqs-[VERSION].zip` will be created in the target directory. This file should be placed where the connector will be started, and then unpacked. You can deploy this connector wherever you want (local server, cloud provider etc.).
+After running this command, the file  `mqtt2sqs-[VERSION].zip` will be created in the target directory.
+
+## Installation
+
+The file downloaded/created above should be placed where the connector will be started, and then unpacked. You can deploy this connector wherever you want (local server, cloud provider etc.).
 
 After unpacking the archive, you should get a structure similar to this:
 ```
