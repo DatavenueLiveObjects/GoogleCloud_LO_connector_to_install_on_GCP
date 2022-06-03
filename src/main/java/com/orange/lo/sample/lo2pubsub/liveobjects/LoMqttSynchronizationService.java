@@ -39,7 +39,7 @@ public class LoMqttSynchronizationService {
     private final LoProperties loProperties;
     private final ThreadPoolExecutor threadPoolExecutor;
 
-    private final int DEFAULT_BATCH_SIZE = 10;
+    private static final int DEFAULT_BATCH_SIZE = 10;
 
     public LoMqttSynchronizationService(
             LOApiClient loApiClient,
@@ -77,7 +77,7 @@ public class LoMqttSynchronizationService {
 
             List<SynchronizationTask> tasks = messagePackages
                     .stream()
-                    .map((messageList) -> new SynchronizationTask(pubSubMessageSender, messageList))
+                    .map(messageList -> new SynchronizationTask(pubSubMessageSender, messageList))
                     .collect(Collectors.toList());
 
             try {
