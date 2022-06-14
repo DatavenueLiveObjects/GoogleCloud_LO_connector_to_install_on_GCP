@@ -7,33 +7,34 @@
 
 package com.orange.lo.sample.lo2pubsub.liveobjects;
 
-import com.orange.lo.sample.lo2pubsub.utils.CountersProvider;
-import com.orange.lo.sdk.fifomqtt.DataManagementFifoCallback;
+import java.lang.invoke.MethodHandles;
+import java.util.Queue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Queue;
+import com.orange.lo.sample.lo2pubsub.utils.Counters;
+import com.orange.lo.sdk.fifomqtt.DataManagementFifoCallback;
 
 @Component
 public class LoMqttMessageHandler implements DataManagementFifoCallback {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final CountersProvider countersProvider;
+    private final Counters counters;
     private final Queue<String> messageQueue;
 
-    public LoMqttMessageHandler(CountersProvider countersProvider, Queue<String> messageQueue) {
+    public LoMqttMessageHandler(Counters counters, Queue<String> messageQueue) {
         LOG.info("LoMqttHandler init...");
 
-        this.countersProvider = countersProvider;
+        this.counters = counters;
         this.messageQueue = messageQueue;
     }
 
     @Override
     public void onMessage(String message) {
-        countersProvider.evtReceived().increment();
+        counters.getMesasageReadCounter().increment();
         messageQueue.add(message);
     }
 }

@@ -7,24 +7,31 @@
 
 package com.orange.lo.sample.lo2pubsub.pubsub;
 
-import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutureCallback;
-import com.google.cloud.pubsub.v1.Publisher;
-import com.google.pubsub.v1.PubsubMessage;
-import com.orange.lo.sample.lo2pubsub.utils.CountersProvider;
-import io.micrometer.core.instrument.Counter;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutureCallback;
+import com.google.cloud.pubsub.v1.Publisher;
+import com.google.pubsub.v1.PubsubMessage;
+import com.orange.lo.sample.lo2pubsub.utils.Counters;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import io.micrometer.core.instrument.Counter;
 
 @ExtendWith(MockitoExtension.class)
 class PubSubMessageSenderTest {
@@ -33,7 +40,7 @@ class PubSubMessageSenderTest {
     private Publisher publisher;
 
     @Mock
-    private CountersProvider countersProvider;
+    private Counters counters;
 
     @Mock
     private Counter attemptCounter;
@@ -53,12 +60,12 @@ class PubSubMessageSenderTest {
 
     @BeforeEach
     void setUp() {
-        when(countersProvider.evtAttempt()).thenReturn(attemptCounter);
+        when(counters.getMesasageSentAttemptCounter()).thenReturn(attemptCounter);
 
         futuresHandler = new ApiFuturesCallbackHandler();
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, countersProvider, futuresHandler
+                publisher, counters, futuresHandler
         );
     }
 
@@ -84,7 +91,7 @@ class PubSubMessageSenderTest {
         futuresHandler = mock(ApiFuturesCallbackHandler.class);
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, countersProvider, futuresHandler
+                publisher, counters, futuresHandler
         );
 
         // when
@@ -98,7 +105,7 @@ class PubSubMessageSenderTest {
     @Test
     void shouldIncrementSentCounterAfterSuccess() {
         // given
-        when(countersProvider.evtSent()).thenReturn(sentCounter);
+        when(counters.getMesasageSentCounter()).thenReturn(sentCounter);
 
         when(publisher.publish(any())).thenReturn(apiFuture);
 
@@ -115,7 +122,7 @@ class PubSubMessageSenderTest {
     @Test
     void shouldIncrementFailedCounterAfterSuccess() {
         // given
-        when(countersProvider.evtFailed()).thenReturn(failedCounter);
+        when(counters.getMesasageSentFailedCounter()).thenReturn(failedCounter);
 
         when(publisher.publish(any())).thenReturn(apiFuture);
 
