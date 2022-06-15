@@ -15,8 +15,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties({LoProperties.class, PubSubProperties.class})
-public class Application {
+public class ConnectorApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(ConnectorApplication.class, args);
     }
 }

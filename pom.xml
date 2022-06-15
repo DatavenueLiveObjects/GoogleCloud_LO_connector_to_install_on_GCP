@@ -150,7 +150,7 @@
                             </platforms>
                             <programs>
                                 <program>
-                                    <mainClass>com.orange.lo.sample.lo2pubsub.Application</mainClass>
+                                    <mainClass>com.orange.lo.sample.lo2pubsub.ConnectorApplication</mainClass>
                                     <id>app</id>
                                 </program>
                             </programs>
