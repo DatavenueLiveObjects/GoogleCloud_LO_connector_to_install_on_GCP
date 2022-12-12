@@ -9,59 +9,48 @@ import java.util.List;
 public class ModifyConfigurationProperties {
 
     private String loApiKey;
-    private List<String> topics = new ArrayList<>();
-    private String projectId;
-    private String topicId;
-    private String authFileContent;
-
+    private List<String> loTopics = new ArrayList<>();
+    private String pubSubProjectId;
+    private String pubSubTopicId;
+    
+    public String getPubSubTopicId() {
+		return pubSubTopicId;
+	}
+	public void setPubSubTopicId(String pubSubTopicId) {
+		this.pubSubTopicId = pubSubTopicId;
+	}
+	private String pubSubAuthFileContent;
+	
     public String getLoApiKey() {
-        return loApiKey;
-    }
-
-    public void setLoApiKey(String loApiKey) {
-        this.loApiKey = loApiKey;
-    }
-
-    public List<String> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<String> topics) {
-        this.topics = topics;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
-    }
-
-    public String getAuthFileContent() {
-        return authFileContent;
-    }
-
-    public void setAuthFileContent(String authFileContent) {
-        this.authFileContent = authFileContent;
-    }
-
-    @Override
-    public String toString() {
-        return "ModifyConfigurationProperties{" +
-                "loApiKey='" + loApiKey + '\'' +
-                ", topics=" + topics +
-                ", projectId='" + projectId + '\'' +
-                ", topicId='" + topicId + '\'' +
-                ", authFileContent='" + authFileContent + '\'' +
-                '}';
-    }
+		return loApiKey;
+	}
+	public void setLoApiKey(String loApiKey) {
+		this.loApiKey = loApiKey;
+	}
+	public List<String> getLoTopics() {
+		return loTopics;
+	}
+	public void setLoTopics(List<String> loTopics) {
+		this.loTopics = loTopics;
+	}
+	public String getPubSubProjectId() {
+		return pubSubProjectId;
+	}
+	public void setPubSubProjectId(String pubSubProjectId) {
+		this.pubSubProjectId = pubSubProjectId;
+	}
+	public String getPubSubAuthFileContent() {
+		return pubSubAuthFileContent;
+	}
+	public void setPubSubAuthFileContent(String pubSubAuthFileContent) {
+		this.pubSubAuthFileContent = pubSubAuthFileContent;
+	}
+	@Override
+	public String toString() {
+		return "ModifyConfigurationProperties [loApiKey=***" + ", loTopics=" + loTopics + ", pubSubProjectId="
+				+ pubSubProjectId + ", pubSubTopicId=" + pubSubTopicId + ", pubSubAuthFileContent="
+				+ pubSubAuthFileContent + "]";
+	}
+	
+	
 }

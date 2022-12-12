@@ -8,9 +8,7 @@
 package com.orange.lo.sample.lo2pubsub.pubsub;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "google.pub-sub")
 public class PubSubProperties {
 
@@ -30,35 +28,55 @@ public class PubSubProperties {
     private Long maxRpcTimeout;
     private Long totalTimeout;
 
-    public PubSubProperties(
-            String projectId,
-            String topicId,
-            String authFile,
-            Long messageBatchSize,
-            Integer messageSendingFixedDelay,
-            Long initialRetryDelay,
-            Double retryDelayMultiplier,
-            Long maxRetryDelay,
-            Long initialRpcTimeout,
-            Double rpcTimeoutMultiplier,
-            Long maxRpcTimeout,
-            Long totalTimeout
-    ) {
-        this.projectId = projectId;
-        this.topicId = topicId;
-        this.authFile = authFile;
-        this.messageBatchSize = messageBatchSize;
-        this.messageSendingFixedDelay = messageSendingFixedDelay;
-        this.initialRetryDelay = initialRetryDelay;
-        this.retryDelayMultiplier = retryDelayMultiplier;
-        this.maxRetryDelay = maxRetryDelay;
-        this.initialRpcTimeout = initialRpcTimeout;
-        this.rpcTimeoutMultiplier = rpcTimeoutMultiplier;
-        this.maxRpcTimeout = maxRpcTimeout;
-        this.totalTimeout = totalTimeout;
-    }
+    public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
 
-    public String getProjectId() {
+	public void setTopicId(String topicId) {
+		this.topicId = topicId;
+	}
+
+	public void setAuthFile(String authFile) {
+		this.authFile = authFile;
+	}
+
+	public void setMessageBatchSize(Long messageBatchSize) {
+		this.messageBatchSize = messageBatchSize;
+	}
+
+	public void setMessageSendingFixedDelay(Integer messageSendingFixedDelay) {
+		this.messageSendingFixedDelay = messageSendingFixedDelay;
+	}
+
+	public void setInitialRetryDelay(Long initialRetryDelay) {
+		this.initialRetryDelay = initialRetryDelay;
+	}
+
+	public void setRetryDelayMultiplier(Double retryDelayMultiplier) {
+		this.retryDelayMultiplier = retryDelayMultiplier;
+	}
+
+	public void setMaxRetryDelay(Long maxRetryDelay) {
+		this.maxRetryDelay = maxRetryDelay;
+	}
+
+	public void setInitialRpcTimeout(Long initialRpcTimeout) {
+		this.initialRpcTimeout = initialRpcTimeout;
+	}
+
+	public void setRpcTimeoutMultiplier(Double rpcTimeoutMultiplier) {
+		this.rpcTimeoutMultiplier = rpcTimeoutMultiplier;
+	}
+
+	public void setMaxRpcTimeout(Long maxRpcTimeout) {
+		this.maxRpcTimeout = maxRpcTimeout;
+	}
+
+	public void setTotalTimeout(Long totalTimeout) {
+		this.totalTimeout = totalTimeout;
+	}
+
+	public String getProjectId() {
         return projectId;
     }
 

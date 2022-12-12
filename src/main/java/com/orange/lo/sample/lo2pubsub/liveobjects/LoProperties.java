@@ -7,59 +7,77 @@
 
 package com.orange.lo.sample.lo2pubsub.liveobjects;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
-
 import java.util.List;
 
-@ConstructorBinding
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 @ConfigurationProperties(prefix = "lo")
 public class LoProperties {
 
 	private static final String CONNECTOR_TYPE = "LO_GCP_PUBSUB_ADAPTER";
 	
-    private final String hostname;
-    private final String apiKey;
-    private final List<String> topics;
-    private final Integer synchronizationInterval;
-    private final Integer messageQos;
-    private final String mqttPersistenceDir;
-    private final Integer keepAliveIntervalSeconds;
-    private final Integer connectionTimeout;
-    private final Integer messageBatchSize;
-    private final Integer taskQueueSize;
-    private final Integer threadPoolSize;
-    private final Long keepAliveTime;
-
-    public LoProperties(
-            String hostname,
-            String apiKey,
-            List<String> topics,
-            Integer synchronizationInterval,
-            Integer messageQos,
-            String mqttPersistenceDir,
-            Integer keepAliveIntervalSeconds,
-            Integer connectionTimeout,
-            Integer messageBatchSize,
-            Integer taskQueueSize,
-            Integer threadPoolSize,
-            Long keepAliveTime
-    ) {
-        this.hostname = hostname;
-        this.apiKey = apiKey;
-        this.topics = topics;
-        this.synchronizationInterval = synchronizationInterval;
-        this.messageQos = messageQos;
-        this.mqttPersistenceDir = mqttPersistenceDir;
-        this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
-        this.connectionTimeout = connectionTimeout;
-        this.messageBatchSize = messageBatchSize;
-        this.taskQueueSize = taskQueueSize;
-        this.threadPoolSize = threadPoolSize;
-        this.keepAliveTime = keepAliveTime;
-    }
+    private String hostname;
+    private String apiKey;
+    private List<String> topics;
+    private Integer synchronizationInterval;
+    private Integer messageQos;
+    private String mqttPersistenceDir;
+    private Integer keepAliveIntervalSeconds;
+    private Integer connectionTimeout;
+    private Integer messageBatchSize;
+    private Integer taskQueueSize;
+    private Integer threadPoolSize;
+    private Long keepAliveTime;
     
-    public String getConnectorType() {
+    public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
+	public void setTopics(List<String> topics) {
+		this.topics = topics;
+	}
+
+	public void setSynchronizationInterval(Integer synchronizationInterval) {
+		this.synchronizationInterval = synchronizationInterval;
+	}
+
+	public void setMessageQos(Integer messageQos) {
+		this.messageQos = messageQos;
+	}
+
+	public void setMqttPersistenceDir(String mqttPersistenceDir) {
+		this.mqttPersistenceDir = mqttPersistenceDir;
+	}
+
+	public void setKeepAliveIntervalSeconds(Integer keepAliveIntervalSeconds) {
+		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
+	}
+
+	public void setConnectionTimeout(Integer connectionTimeout) {
+		this.connectionTimeout = connectionTimeout;
+	}
+
+	public void setMessageBatchSize(Integer messageBatchSize) {
+		this.messageBatchSize = messageBatchSize;
+	}
+
+	public void setTaskQueueSize(Integer taskQueueSize) {
+		this.taskQueueSize = taskQueueSize;
+	}
+
+	public void setThreadPoolSize(Integer threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
+	}
+
+	public void setKeepAliveTime(Long keepAliveTime) {
+		this.keepAliveTime = keepAliveTime;
+	}
+
+	public String getConnectorType() {
         return CONNECTOR_TYPE;
     }
 
