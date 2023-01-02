@@ -17,7 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class ModifyConfig {
 
-	private static final String CONFIGURATION_FILE_NAME = "application.yaml";
+	private static final String CONFIGURATION_FILE_NAME = "application.yml";
 	private static final String PUB_SUB_AUTH_FILE_NAME = "credentials/auth.json";
 
 	@Bean
