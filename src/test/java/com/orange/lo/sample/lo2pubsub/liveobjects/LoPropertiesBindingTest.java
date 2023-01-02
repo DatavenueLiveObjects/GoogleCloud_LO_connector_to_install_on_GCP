@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(LoProperties.class)
-@TestPropertySource(value = "classpath:application.yaml")
+@TestPropertySource(value = "classpath:application.yml")
 @ContextConfiguration(initializers = ConfigDataApplicationContextInitializer.class)
 class LoPropertiesBindingTest {
 

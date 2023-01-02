@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(PubSubProperties.class)
-@TestPropertySource(value = "classpath:application.yaml")
+@TestPropertySource(value = "classpath:application.yml")
 @ContextConfiguration(initializers = ConfigDataApplicationContextInitializer.class)
 class PubSubPropertiesBindingTest {
 
