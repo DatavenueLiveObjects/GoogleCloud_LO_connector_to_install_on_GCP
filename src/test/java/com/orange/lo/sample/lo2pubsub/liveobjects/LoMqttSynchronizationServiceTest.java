@@ -8,6 +8,7 @@
 package com.orange.lo.sample.lo2pubsub.liveobjects;
 
 import com.orange.lo.sample.lo2pubsub.pubsub.PubSubMessageSender;
+import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
 import com.orange.lo.sdk.LOApiClient;
 import com.orange.lo.sdk.fifomqtt.DataManagementFifo;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,9 @@ class LoMqttSynchronizationServiceTest {
     @Mock
     private ThreadPoolExecutor threadPoolExecutor;
 
+    @Mock
+    private ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+
     private LoMqttSynchronizationService service;
 
 
@@ -56,13 +60,16 @@ class LoMqttSynchronizationServiceTest {
 
     private void prepareService(Queue<String> messageQueue) {
         service = new LoMqttSynchronizationService(
-                loApiClient, pubSubMessageSender, messageQueue, properties, threadPoolExecutor
+                loApiClient, pubSubMessageSender, messageQueue, properties, threadPoolExecutor, connectorHealthActuatorEndpoint
         );
     }
 
     @Test
     public void shouldStartMethodDoTriggerDataManagementFifo() {
         // when
+        when(connectorHealthActuatorEndpoint.isLoConnectionStatus()).thenReturn(true);
+        when(connectorHealthActuatorEndpoint.isCloudConnectionStatus()).thenReturn(true);
+
         service.start();
 
         // then

@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,6 +55,9 @@ class PubSubMessageSenderTest {
     @Mock
     private ApiFuture<String> apiFuture;
 
+    @Mock
+    private ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+
     private ApiFuturesCallbackHandler futuresHandler;
 
     private PubSubMessageSender pubSubMessageSender;
@@ -65,7 +69,7 @@ class PubSubMessageSenderTest {
         futuresHandler = new ApiFuturesCallbackHandler();
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, counters, futuresHandler
+                publisher, counters, futuresHandler, connectorHealthActuatorEndpoint
         );
     }
 
@@ -91,7 +95,7 @@ class PubSubMessageSenderTest {
         futuresHandler = mock(ApiFuturesCallbackHandler.class);
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, counters, futuresHandler
+                publisher, counters, futuresHandler, connectorHealthActuatorEndpoint
         );
 
         // when

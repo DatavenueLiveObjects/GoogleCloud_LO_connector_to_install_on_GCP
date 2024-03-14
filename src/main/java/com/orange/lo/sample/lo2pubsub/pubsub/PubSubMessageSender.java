@@ -7,19 +7,19 @@
 
 package com.orange.lo.sample.lo2pubsub.pubsub;
 
-import java.lang.invoke.MethodHandles;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
 import com.orange.lo.sample.lo2pubsub.utils.Counters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Component
 public class PubSubMessageSender {
@@ -29,15 +29,18 @@ public class PubSubMessageSender {
     private final Publisher publisher;
     private final Counters counters;
     private final ApiFuturesCallbackSupport apiFuturesCallbackSupport;
+    private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
 
     public PubSubMessageSender(
             Publisher publisher,
             Counters counters,
-            ApiFuturesCallbackSupport apiFuturesCallbackSupport
+            ApiFuturesCallbackSupport apiFuturesCallbackSupport,
+            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint
     ) {
         this.publisher = publisher;
         this.counters = counters;
         this.apiFuturesCallbackSupport = apiFuturesCallbackSupport;
+        this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
     }
 
     public void sendMessages(List<String> messageList) {
@@ -45,7 +48,7 @@ public class PubSubMessageSender {
     }
 
     private void sendMessage(String message) {
-    	counters.getMesasageSentAttemptCounter().increment();
+        counters.getMesasageSentAttemptCounter().increment();
 
         ByteString data = ByteString.copyFromUtf8(message);
         PubsubMessage pubsubMessage = PubsubMessage
@@ -59,13 +62,17 @@ public class PubSubMessageSender {
             public void onFailure(Throwable throwable) {
                 LOGGER.error("Unable to publish message ", throwable);
                 counters.getMesasageSentFailedCounter().increment();
+                connectorHealthActuatorEndpoint.setCloudConnectionStatus(false);
+                LOGGER.error("Problem with connection. Check GCP credentials. ", throwable);
             }
 
             @Override
             public void onSuccess(String messageId) {
                 LOGGER.debug("Message {} published", messageId);
                 counters.getMesasageSentCounter().increment();
+                connectorHealthActuatorEndpoint.setCloudConnectionStatus(true);
             }
         });
+
     }
 }
