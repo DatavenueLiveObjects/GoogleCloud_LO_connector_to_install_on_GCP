@@ -9,7 +9,7 @@ package com.orange.lo.sample.lo2pubsub.pubsub;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.google.api.gax.rpc.UnauthenticatedException;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
@@ -17,11 +17,9 @@ import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
 import com.orange.lo.sample.lo2pubsub.utils.Counters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -35,20 +33,17 @@ public class PubSubMessageSender {
     private final ApiFuturesCallbackSupport apiFuturesCallbackSupport;
     private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
 
-    private final PubSubProperties pubSubProperties;
 
     public PubSubMessageSender(
             Publisher publisher,
             Counters counters,
             ApiFuturesCallbackSupport apiFuturesCallbackSupport,
-            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint,
-            PubSubProperties pubSubProperties
+            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint
     ) {
         this.publisher = publisher;
         this.counters = counters;
         this.apiFuturesCallbackSupport = apiFuturesCallbackSupport;
         this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
-        this.pubSubProperties = pubSubProperties;
     }
 
     public void sendMessages(List<String> messageList) {
@@ -87,9 +82,8 @@ public class PubSubMessageSender {
     @PostConstruct
     private void checkConnection() {
         try {
-            GoogleCredentials
-                    .fromStream(new ClassPathResource(pubSubProperties.getAuthFile()).getInputStream());
-        } catch (IOException e) {
+            sendMessage("");
+        } catch (UnauthenticatedException e) {
             LOGGER.error("Problem with connection. Check GCP credentials. ", e);
             connectorHealthActuatorEndpoint.setCloudConnectionStatus(false);
         }

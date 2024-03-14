@@ -69,7 +69,7 @@ class PubSubMessageSenderTest {
         futuresHandler = new ApiFuturesCallbackHandler();
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, counters, futuresHandler, connectorHealthActuatorEndpoint, null
+                publisher, counters, futuresHandler, connectorHealthActuatorEndpoint
         );
     }
 
@@ -95,7 +95,7 @@ class PubSubMessageSenderTest {
         futuresHandler = mock(ApiFuturesCallbackHandler.class);
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, counters, futuresHandler, connectorHealthActuatorEndpoint, null
+                publisher, counters, futuresHandler, connectorHealthActuatorEndpoint
         );
 
         // when
