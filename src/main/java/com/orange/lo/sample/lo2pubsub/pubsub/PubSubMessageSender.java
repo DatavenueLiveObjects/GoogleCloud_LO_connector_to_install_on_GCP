@@ -9,7 +9,6 @@ package com.orange.lo.sample.lo2pubsub.pubsub;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
-import com.google.api.gax.rpc.UnauthenticatedException;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
@@ -32,18 +31,21 @@ public class PubSubMessageSender {
     private final Counters counters;
     private final ApiFuturesCallbackSupport apiFuturesCallbackSupport;
     private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+    private final CheckConnectionApiFutureCallbackImpl checkConnectionApiFutureCallback;
 
 
     public PubSubMessageSender(
             Publisher publisher,
             Counters counters,
             ApiFuturesCallbackSupport apiFuturesCallbackSupport,
-            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint
+            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint,
+            CheckConnectionApiFutureCallbackImpl apiFutureCallback
     ) {
         this.publisher = publisher;
         this.counters = counters;
         this.apiFuturesCallbackSupport = apiFuturesCallbackSupport;
         this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
+        this.checkConnectionApiFutureCallback = apiFutureCallback;
     }
 
     public void sendMessages(List<String> messageList) {
@@ -81,11 +83,13 @@ public class PubSubMessageSender {
 
     @PostConstruct
     private void checkConnection() {
-        try {
-            sendMessage("");
-        } catch (UnauthenticatedException e) {
-            LOGGER.error("Problem with connection. Check GCP credentials. ", e);
-            connectorHealthActuatorEndpoint.setCloudConnectionStatus(false);
-        }
+        ByteString data = ByteString.copyFromUtf8("");
+        PubsubMessage pubsubMessage = PubsubMessage
+                .newBuilder()
+                .setData(data)
+                .build();
+        ApiFuture<String> messageIdFuture = publisher.publish(pubsubMessage);
+
+        apiFuturesCallbackSupport.addCallback(messageIdFuture, checkConnectionApiFutureCallback);
     }
 }

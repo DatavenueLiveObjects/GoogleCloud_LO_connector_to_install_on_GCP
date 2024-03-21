@@ -72,9 +72,6 @@ public class LoMqttSynchronizationService {
             LOG.error("Problem with connection. Check LO credentials. ", e);
             connectorHealthActuatorEndpoint.setLoConnectionStatus(false);
         }
-
-        if (connectorHealthActuatorEndpoint.isCloudConnectionStatus() && connectorHealthActuatorEndpoint.isLoConnectionStatus())
-            dataManagementFifo.connectAndSubscribe();
     }
 
     @PreDestroy
