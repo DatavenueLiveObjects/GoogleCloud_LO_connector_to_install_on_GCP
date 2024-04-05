@@ -34,7 +34,7 @@ public class LoMqttSynchronizationService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final PubSubMessageSender pubSubMessageSender;
-    private final Queue<String> messageQueue;
+    private final Queue<LoMessage> messageQueue;
     private final DataManagementFifo dataManagementFifo;
     private final LoProperties loProperties;
     private final ThreadPoolExecutor threadPoolExecutor;
@@ -44,7 +44,7 @@ public class LoMqttSynchronizationService {
     public LoMqttSynchronizationService(
             LOApiClient loApiClient,
             PubSubMessageSender pubSubMessageSender,
-            Queue<String> messageQueue,
+            Queue<LoMessage> messageQueue,
             LoProperties loProperties,
             ThreadPoolExecutor threadPoolExecutor
     ) {
@@ -73,7 +73,7 @@ public class LoMqttSynchronizationService {
     public void synchronize() {
         if (!messageQueue.isEmpty()) {
             int batchSize = loProperties.getMessageBatchSize() != null ? loProperties.getMessageBatchSize() : DEFAULT_BATCH_SIZE;
-            List<List<String>> messagePackages = Lists.partition(new LinkedList<>(messageQueue), batchSize);
+            List<List<LoMessage>> messagePackages = Lists.partition(new LinkedList<>(messageQueue), batchSize);
 
             List<SynchronizationTask> tasks = messagePackages
                     .stream()

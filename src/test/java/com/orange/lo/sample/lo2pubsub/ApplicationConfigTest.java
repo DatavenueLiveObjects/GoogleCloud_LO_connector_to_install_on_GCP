@@ -7,6 +7,7 @@
 
 package com.orange.lo.sample.lo2pubsub;
 
+import com.orange.lo.sample.lo2pubsub.liveobjects.LoMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.Queue;
@@ -19,7 +20,7 @@ class ApplicationConfigTest {
     void shouldCreateMessageQueue() {
         ApplicationConfig applicationConfig = new ApplicationConfig();
 
-        Queue<String> stringQueue = applicationConfig.messageQueue();
+        Queue<LoMessage> stringQueue = applicationConfig.messageQueue();
 
         assertNotNull(stringQueue);
     }
