@@ -34,7 +34,7 @@ class LoMqttMessageHandlerTest {
     @Mock
     private Counter receivedCounter;
 
-    private Queue<String> messageQueue;
+    private Queue<LoMessage> messageQueue;
 
     private LoMqttMessageHandler handler;
 
@@ -48,7 +48,7 @@ class LoMqttMessageHandlerTest {
     @Test
     public void shouldIncrementCounterOnMessage() {
         // when
-        handler.onMessage("test message");
+        handler.onMessage(1, "test message");
 
         // then
         verify(receivedCounter, times(1)).increment();
@@ -57,11 +57,11 @@ class LoMqttMessageHandlerTest {
     @Test
     public void shouldAddMessageToQueueOnMessage() {
         // when
-        handler.onMessage("test message");
+        handler.onMessage(1, "test message");
 
         // then
         assertEquals(1, messageQueue.size());
-        assertEquals("test message", messageQueue.peek());
+        assertEquals(new LoMessage(1, "test message"), messageQueue.peek());
     }
 
 }

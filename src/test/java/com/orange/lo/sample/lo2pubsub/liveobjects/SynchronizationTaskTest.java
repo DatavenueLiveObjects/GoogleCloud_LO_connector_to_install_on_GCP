@@ -28,7 +28,7 @@ class SynchronizationTaskTest {
     @Test
     public void shouldSendMessagesOnCall() {
         // given
-        List<String> exampleMessagesList = Arrays.asList("message1", "message2");
+        List<LoMessage> exampleMessagesList = Arrays.asList(new LoMessage(1, "message1") , new LoMessage(1, "message2"));
         SynchronizationTask synchronizationTask = new SynchronizationTask(pubSubMessageSender, exampleMessagesList);
 
         // when

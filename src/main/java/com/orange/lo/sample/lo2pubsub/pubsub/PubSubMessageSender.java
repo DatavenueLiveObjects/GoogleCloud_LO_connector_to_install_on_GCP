@@ -10,6 +10,9 @@ package com.orange.lo.sample.lo2pubsub.pubsub;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+import com.orange.lo.sample.lo2pubsub.liveobjects.LoMessage;
+import com.orange.lo.sample.lo2pubsub.liveobjects.LoProperties;
+import com.orange.lo.sdk.LOApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -29,25 +32,31 @@ public class PubSubMessageSender {
     private final Publisher publisher;
     private final Counters counters;
     private final ApiFuturesCallbackSupport apiFuturesCallbackSupport;
+    private final LOApiClient loApiClient;
+    private final LoProperties loProperties;
 
     public PubSubMessageSender(
             Publisher publisher,
             Counters counters,
-            ApiFuturesCallbackSupport apiFuturesCallbackSupport
+            ApiFuturesCallbackSupport apiFuturesCallbackSupport,
+            LOApiClient loApiClient,
+            LoProperties loProperties
     ) {
         this.publisher = publisher;
         this.counters = counters;
         this.apiFuturesCallbackSupport = apiFuturesCallbackSupport;
+        this.loApiClient = loApiClient;
+        this.loProperties = loProperties;
     }
 
-    public void sendMessages(List<String> messageList) {
+    public void sendMessages(List<LoMessage> messageList) {
         messageList.forEach(this::sendMessage);
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(LoMessage message) {
     	counters.getMesasageSentAttemptCounter().increment();
 
-        ByteString data = ByteString.copyFromUtf8(message);
+        ByteString data = ByteString.copyFromUtf8(message.getMessage());
         PubsubMessage pubsubMessage = PubsubMessage
                 .newBuilder()
                 .setData(data)
@@ -59,12 +68,14 @@ public class PubSubMessageSender {
             public void onFailure(Throwable throwable) {
                 LOGGER.error("Unable to publish message ", throwable);
                 counters.getMesasageSentFailedCounter().increment();
+                loApiClient.getDataManagementFifo().sendAck(message.getMessageId(), loProperties.getMessageQos());
             }
 
             @Override
             public void onSuccess(String messageId) {
                 LOGGER.debug("Message {} published", messageId);
                 counters.getMesasageSentCounter().increment();
+                loApiClient.getDataManagementFifo().sendAck(message.getMessageId(), loProperties.getMessageQos());
             }
         });
     }
