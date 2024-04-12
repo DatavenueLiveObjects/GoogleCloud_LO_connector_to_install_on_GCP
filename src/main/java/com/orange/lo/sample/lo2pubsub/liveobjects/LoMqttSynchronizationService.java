@@ -82,6 +82,9 @@ public class LoMqttSynchronizationService {
 
     @Scheduled(fixedRateString = "${lo.synchronization-interval}")
     public void synchronize() {
+        if (!dataManagementFifo.isConnected() && connectorHealthActuatorEndpoint.isCloudConnectionStatus() && connectorHealthActuatorEndpoint.isLoConnectionStatus())
+            dataManagementFifo.connectAndSubscribe();
+
         if (!messageQueue.isEmpty()) {
             int batchSize = loProperties.getMessageBatchSize() != null ? loProperties.getMessageBatchSize() : DEFAULT_BATCH_SIZE;
             List<List<LoMessage>> messagePackages = Lists.partition(new LinkedList<>(messageQueue), batchSize);

@@ -7,23 +7,16 @@
 
 package com.orange.lo.sample.lo2pubsub.pubsub;
 
-import java.lang.invoke.MethodHandles;
-import java.util.List;
-
-import com.orange.lo.sample.lo2pubsub.liveobjects.LoMessage;
-import com.orange.lo.sample.lo2pubsub.liveobjects.LoProperties;
-import com.orange.lo.sdk.LOApiClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import com.orange.lo.sample.lo2pubsub.liveobjects.LoMessage;
+import com.orange.lo.sample.lo2pubsub.liveobjects.LoProperties;
 import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
 import com.orange.lo.sample.lo2pubsub.utils.Counters;
+import com.orange.lo.sdk.LOApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -51,8 +44,7 @@ public class PubSubMessageSender {
             Counters counters,
             ApiFuturesCallbackSupport apiFuturesCallbackSupport,
             LOApiClient loApiClient,
-            LoProperties loProperties
-            ApiFuturesCallbackSupport apiFuturesCallbackSupport,
+            LoProperties loProperties,
             ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint,
             CheckConnectionApiFutureCallbackImpl apiFutureCallback
     ) {
@@ -70,7 +62,7 @@ public class PubSubMessageSender {
     }
 
     private void sendMessage(LoMessage message) {
-    	counters.getMesasageSentAttemptCounter().increment();
+        counters.getMesasageSentAttemptCounter().increment();
 
         ByteString data = ByteString.copyFromUtf8(message.getMessage());
         PubsubMessage pubsubMessage = PubsubMessage
@@ -102,7 +94,7 @@ public class PubSubMessageSender {
 
     @PostConstruct
     private void checkConnection() {
-        ByteString data = ByteString.copyFromUtf8("");
+        ByteString data = ByteString.copyFromUtf8(" ");
         PubsubMessage pubsubMessage = PubsubMessage
                 .newBuilder()
                 .setData(data)

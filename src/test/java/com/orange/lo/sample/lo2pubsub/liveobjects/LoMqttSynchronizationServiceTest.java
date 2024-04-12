@@ -67,13 +67,10 @@ class LoMqttSynchronizationServiceTest {
     @Test
     public void shouldStartMethodDoTriggerDataManagementFifo() {
         // when
-        when(connectorHealthActuatorEndpoint.isLoConnectionStatus()).thenReturn(true);
-        when(connectorHealthActuatorEndpoint.isCloudConnectionStatus()).thenReturn(true);
-
         service.start();
 
         // then
-        verify(dataManagementFifo, times(1)).connectAndSubscribe();
+        verify(dataManagementFifo, times(1)).connect();
     }
 
     @Test
@@ -187,7 +184,7 @@ class LoMqttSynchronizationServiceTest {
 
     private Queue<LoMessage> getExampleMessageQueue(int batchSize) {
         return IntStream.range(1, batchSize + 1)
-                .mapToObj(i -> new LoMessage(i, String.format("Message %d", i)) )
+                .mapToObj(i -> new LoMessage(i, String.format("Message %d", i)))
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 }
