@@ -23,9 +23,9 @@ public class LoMqttMessageHandler implements DataManagementFifoCallback {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Counters counters;
-    private final Queue<String> messageQueue;
+    private final Queue<LoMessage> messageQueue;
 
-    public LoMqttMessageHandler(Counters counters, Queue<String> messageQueue) {
+    public LoMqttMessageHandler(Counters counters, Queue<LoMessage> messageQueue) {
         LOG.info("LoMqttHandler init...");
 
         this.counters = counters;
@@ -33,8 +33,8 @@ public class LoMqttMessageHandler implements DataManagementFifoCallback {
     }
 
     @Override
-    public void onMessage(String message) {
+    public void onMessage(int messageId, String message) {
         counters.getMesasageReadCounter().increment();
-        messageQueue.add(message);
+        messageQueue.add(new LoMessage(messageId, message));
     }
 }

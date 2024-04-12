@@ -16,9 +16,9 @@ import java.util.concurrent.Callable;
 class SynchronizationTask implements Callable<Void> {
 
     private final PubSubMessageSender pubSubMessageSender;
-    private final List<String> messageList;
+    private final List<LoMessage> messageList;
 
-    public SynchronizationTask(PubSubMessageSender pubSubMessageSender, List<String> messageList) {
+    public SynchronizationTask(PubSubMessageSender pubSubMessageSender, List<LoMessage> messageList) {
         this.pubSubMessageSender = pubSubMessageSender;
         this.messageList = messageList;
     }

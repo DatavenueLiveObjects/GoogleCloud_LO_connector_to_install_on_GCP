@@ -58,7 +58,7 @@ class LoMqttSynchronizationServiceTest {
         prepareService(new LinkedList<>());
     }
 
-    private void prepareService(Queue<String> messageQueue) {
+    private void prepareService(Queue<LoMessage> messageQueue) {
         service = new LoMqttSynchronizationService(
                 loApiClient, pubSubMessageSender, messageQueue, properties, threadPoolExecutor, connectorHealthActuatorEndpoint
         );
@@ -101,8 +101,8 @@ class LoMqttSynchronizationServiceTest {
 
         when(properties.getMessageBatchSize()).thenReturn(batchSize);
 
-        Queue<String> messageQueue = getExampleMessageQueue(batchSize);
-        List<String> expectedMessages = new ArrayList<>(messageQueue);
+        Queue<LoMessage> messageQueue = getExampleMessageQueue(batchSize);
+        List<LoMessage> expectedMessages = new ArrayList<>(messageQueue);
 
         prepareService(messageQueue);
 
@@ -125,10 +125,10 @@ class LoMqttSynchronizationServiceTest {
 
         when(properties.getMessageBatchSize()).thenReturn(batchSize);
 
-        Queue<String> messageQueue = getExampleMessageQueue(totalLength);
+        Queue<LoMessage> messageQueue = getExampleMessageQueue(totalLength);
 
-        List<String> expectedMessages1 = (new LinkedList<>(messageQueue)).subList(0, batchSize);
-        List<String> expectedMessages2 = (new LinkedList<>(messageQueue)).subList(batchSize, totalLength);
+        List<LoMessage> expectedMessages1 = (new LinkedList<>(messageQueue)).subList(0, batchSize);
+        List<LoMessage> expectedMessages2 = (new LinkedList<>(messageQueue)).subList(batchSize, totalLength);
 
         prepareService(messageQueue);
 
@@ -151,8 +151,8 @@ class LoMqttSynchronizationServiceTest {
 
         int expectedBatchSize = 10;
 
-        Queue<String> messageQueue = getExampleMessageQueue(expectedBatchSize);
-        List<String> expectedMessages = (new LinkedList<>(messageQueue)).subList(0, expectedBatchSize);
+        Queue<LoMessage> messageQueue = getExampleMessageQueue(expectedBatchSize);
+        List<LoMessage> expectedMessages = (new LinkedList<>(messageQueue)).subList(0, expectedBatchSize);
 
         prepareService(messageQueue);
 
@@ -174,7 +174,7 @@ class LoMqttSynchronizationServiceTest {
 
         when(properties.getMessageBatchSize()).thenReturn(batchSize);
 
-        Queue<String> messageQueue = getExampleMessageQueue(batchSize);
+        Queue<LoMessage> messageQueue = getExampleMessageQueue(batchSize);
 
         prepareService(messageQueue);
 
@@ -185,9 +185,9 @@ class LoMqttSynchronizationServiceTest {
         assertEquals(0, messageQueue.size());
     }
 
-    private Queue<String> getExampleMessageQueue(int batchSize) {
+    private Queue<LoMessage> getExampleMessageQueue(int batchSize) {
         return IntStream.range(1, batchSize + 1)
-                .mapToObj(i -> String.format("Message %d", i))
+                .mapToObj(i -> new LoMessage(i, String.format("Message %d", i)) )
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 }
