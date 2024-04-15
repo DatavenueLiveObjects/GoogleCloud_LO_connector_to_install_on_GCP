@@ -10,8 +10,10 @@ package com.orange.lo.sample.lo2pubsub.liveobjects;
 
 import com.google.common.collect.Lists;
 import com.orange.lo.sample.lo2pubsub.pubsub.PubSubMessageSender;
+import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
 import com.orange.lo.sdk.LOApiClient;
 import com.orange.lo.sdk.fifomqtt.DataManagementFifo;
+import com.orange.lo.sdk.mqtt.exceptions.LoMqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -38,6 +40,7 @@ public class LoMqttSynchronizationService {
     private final DataManagementFifo dataManagementFifo;
     private final LoProperties loProperties;
     private final ThreadPoolExecutor threadPoolExecutor;
+    private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
 
     private static final int DEFAULT_BATCH_SIZE = 10;
 
@@ -46,7 +49,8 @@ public class LoMqttSynchronizationService {
             PubSubMessageSender pubSubMessageSender,
             Queue<LoMessage> messageQueue,
             LoProperties loProperties,
-            ThreadPoolExecutor threadPoolExecutor
+            ThreadPoolExecutor threadPoolExecutor,
+            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint
     ) {
         LOG.info("LoMqttSynchronizationService init...");
 
@@ -55,12 +59,19 @@ public class LoMqttSynchronizationService {
         this.dataManagementFifo = loApiClient.getDataManagementFifo();
         this.loProperties = loProperties;
         this.threadPoolExecutor = threadPoolExecutor;
+        this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
     }
 
     @PostConstruct
     public void start() {
         LOG.info("Start receiving messages...");
-        dataManagementFifo.connectAndSubscribe();
+
+        try {
+            dataManagementFifo.connect();
+        } catch (LoMqttException e) {
+            LOG.error("Problem with connection. Check LO credentials. ", e);
+            connectorHealthActuatorEndpoint.setLoConnectionStatus(false);
+        }
     }
 
     @PreDestroy
@@ -71,6 +82,9 @@ public class LoMqttSynchronizationService {
 
     @Scheduled(fixedRateString = "${lo.synchronization-interval}")
     public void synchronize() {
+        if (!dataManagementFifo.isConnected() && connectorHealthActuatorEndpoint.isCloudConnectionStatus() && connectorHealthActuatorEndpoint.isLoConnectionStatus())
+            dataManagementFifo.connectAndSubscribe();
+
         if (!messageQueue.isEmpty()) {
             int batchSize = loProperties.getMessageBatchSize() != null ? loProperties.getMessageBatchSize() : DEFAULT_BATCH_SIZE;
             List<List<LoMessage>> messagePackages = Lists.partition(new LinkedList<>(messageQueue), batchSize);

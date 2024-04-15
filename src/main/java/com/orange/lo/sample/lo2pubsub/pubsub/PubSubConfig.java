@@ -13,27 +13,42 @@ import com.google.api.gax.retrying.RetrySettings;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.TopicName;
+import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.threeten.bp.Duration;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 @Configuration
 public class PubSubConfig {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final PubSubProperties pubSubProperties;
 
-    public PubSubConfig(PubSubProperties pubSubProperties) {
+    private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+
+    public PubSubConfig(PubSubProperties pubSubProperties, ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint) {
         this.pubSubProperties = pubSubProperties;
+        this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
     }
 
     @Bean
     public Publisher publisher() throws IOException {
         TopicName topicName = TopicName.of(pubSubProperties.getProjectId(), pubSubProperties.getTopicId());
 
-        GoogleCredentials googleCredentials = getCredentials();
+        GoogleCredentials googleCredentials = null;
+        try {
+            googleCredentials = getCredentials();
+        } catch (IOException e) {
+            LOG.error("Problem with connection. Check GCP credentials. ", e);
+            connectorHealthActuatorEndpoint.setCloudConnectionStatus(false);
+        }
 
         BatchingSettings batchingSettings = getBatchSettings();
 

@@ -8,6 +8,7 @@
 package com.orange.lo.sample.lo2pubsub.liveobjects;
 
 import com.google.cloud.pubsub.v1.Publisher;
+import com.orange.lo.sample.lo2pubsub.pubsub.ApiFuturesCallbackSupport;
 import com.orange.lo.sdk.LOApiClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ class LoConfigBeanBindingTest {
 
     @MockBean
     private Publisher publisher;
+    @MockBean
+    private ApiFuturesCallbackSupport apiFuturesCallbackSupport;
 
     @Test
     public void shouldAllBeansProperlyBound() {
