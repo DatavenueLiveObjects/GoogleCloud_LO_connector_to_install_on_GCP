@@ -10,7 +10,7 @@
 
     <groupId>com.orange.lo.sample.lo2pubsub</groupId>
     <artifactId>lo2pubsub</artifactId>
-    <version>1.12-SNAPSHOT</version>
+    <version>1.12</version>
     <name>lo2pubsub</name>
     <description>Connector between Live Objects and Google Pub/Sub</description>
 
@@ -103,7 +103,7 @@
         <url>https://github.com/DatavenueLiveObjects/GoogleCloud_LO_connector_to_install_on_GCP.git</url>
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
-        <tag>v1.0</tag>
+        <tag>v1.12</tag>
     </scm>
 
     <profiles>
