@@ -28,3 +28,8 @@ google:
     rpc-timeout-multiplier: 2.3
     max-rpc-timeout: 678
     total-timeout: 789
+
+metrics:
+  namespace: CCS
+  dimension-name: connector-id
+  dimension-value: connector-123
