@@ -20,6 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class LoConfigBeanBindingTest {
 
+    static {
+        System.setProperty("aws.region", "eu-west-1");
+    }
+
     @Autowired
     private LOApiClient loApiClient;
 

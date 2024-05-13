@@ -29,6 +29,11 @@ google:
     max-rpc-timeout: 600000
     total-timeout: 600000
 
+metrics:
+  namespace: CCS
+  dimension-name: connector-id
+  dimension-value:
+
 management:
   endpoints:
     web:
