@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient;
 
 import java.lang.invoke.MethodHandles;
@@ -27,6 +28,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Configuration
 public class ApplicationConfig {
 
+	private static final String SERVICE_PROFILE_NAME = "service-profile";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private final MetricsProperties metricsProperties;
 
@@ -41,7 +43,11 @@ public class ApplicationConfig {
 
 	@Bean
 	public MeterRegistry meterRegistry() {
-		CloudWatchMeterRegistry cloudWatchMeterRegistry = new CloudWatchMeterRegistry(cloudWatchConfig(), Clock.SYSTEM, CloudWatchAsyncClient.create());
+		CloudWatchAsyncClient cloudWatchAsyncClient = CloudWatchAsyncClient.builder()
+				.credentialsProvider(ProfileCredentialsProvider.create(SERVICE_PROFILE_NAME))
+				.build();
+
+		CloudWatchMeterRegistry cloudWatchMeterRegistry = new CloudWatchMeterRegistry(cloudWatchConfig(), Clock.SYSTEM, cloudWatchAsyncClient);
 		cloudWatchMeterRegistry.config()
 				.meterFilter(MeterFilter.deny(id -> !id.getName().startsWith("message")))
 				.commonTags(metricsProperties.getDimensionName(), metricsProperties.getDimensionValue());
