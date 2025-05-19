@@ -30,6 +30,8 @@ google:
     total-timeout: 600000
 
 metrics:
+  send-to-cloudwatch: false
+  use-service-profile: false
   namespace: CCS
   dimension-name: connector-id
   dimension-value:
