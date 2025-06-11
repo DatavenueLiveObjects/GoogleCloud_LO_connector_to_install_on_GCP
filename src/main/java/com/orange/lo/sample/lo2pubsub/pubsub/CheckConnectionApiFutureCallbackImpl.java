@@ -40,6 +40,6 @@ public class CheckConnectionApiFutureCallbackImpl implements ApiFutureCallback<S
     @Override
     public void onSuccess(String s) {
         counters.setCloudConnectionStatus(true);
-        dataManagementFifo.disconnect();
+        dataManagementFifo.connectAndSubscribe();
     }
 }
