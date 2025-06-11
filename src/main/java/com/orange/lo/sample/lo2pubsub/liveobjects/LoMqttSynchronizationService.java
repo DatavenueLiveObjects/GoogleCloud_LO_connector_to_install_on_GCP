@@ -11,6 +11,7 @@ package com.orange.lo.sample.lo2pubsub.liveobjects;
 import com.google.common.collect.Lists;
 import com.orange.lo.sample.lo2pubsub.pubsub.PubSubMessageSender;
 import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
+import com.orange.lo.sample.lo2pubsub.utils.Counters;
 import com.orange.lo.sdk.LOApiClient;
 import com.orange.lo.sdk.fifomqtt.DataManagementFifo;
 import com.orange.lo.sdk.mqtt.exceptions.LoMqttException;
@@ -40,7 +41,7 @@ public class LoMqttSynchronizationService {
     private final DataManagementFifo dataManagementFifo;
     private final LoProperties loProperties;
     private final ThreadPoolExecutor threadPoolExecutor;
-    private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+    private final Counters counters;
 
     private static final int DEFAULT_BATCH_SIZE = 10;
 
@@ -50,7 +51,7 @@ public class LoMqttSynchronizationService {
             Queue<LoMessage> messageQueue,
             LoProperties loProperties,
             ThreadPoolExecutor threadPoolExecutor,
-            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint
+            Counters counters
     ) {
         LOG.info("LoMqttSynchronizationService init...");
 
@@ -59,7 +60,7 @@ public class LoMqttSynchronizationService {
         this.dataManagementFifo = loApiClient.getDataManagementFifo();
         this.loProperties = loProperties;
         this.threadPoolExecutor = threadPoolExecutor;
-        this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
+        this.counters = counters;
     }
 
     @PostConstruct
@@ -70,7 +71,7 @@ public class LoMqttSynchronizationService {
             dataManagementFifo.connect();
         } catch (LoMqttException e) {
             LOG.error("Problem with connection. Check LO credentials. ", e);
-            connectorHealthActuatorEndpoint.setLoConnectionStatus(false);
+            counters.setLoConnectionStatus(false);
         }
     }
 
@@ -82,7 +83,7 @@ public class LoMqttSynchronizationService {
 
     @Scheduled(fixedRateString = "${lo.synchronization-interval}")
     public void synchronize() {
-        if (!dataManagementFifo.isConnected() && connectorHealthActuatorEndpoint.isCloudConnectionStatus() && connectorHealthActuatorEndpoint.isLoConnectionStatus())
+        if (!dataManagementFifo.isConnected() && counters.isCloudConnectionStatusUp() && counters.isLoConnectionStatusUp())
             dataManagementFifo.connectAndSubscribe();
 
         if (!messageQueue.isEmpty()) {

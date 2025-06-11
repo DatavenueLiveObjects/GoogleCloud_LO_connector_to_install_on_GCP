@@ -60,9 +60,6 @@ class PubSubMessageSenderTest {
     @Mock
     LoProperties loProperties;
 
-    @Mock
-    private ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
-
     private ApiFuturesCallbackHandler futuresHandler;
 
     private PubSubMessageSender pubSubMessageSender;
@@ -76,8 +73,7 @@ class PubSubMessageSenderTest {
         futuresHandler = new ApiFuturesCallbackHandler();
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, counters, futuresHandler, loApiClient, loProperties,
-                connectorHealthActuatorEndpoint, apiFutureCallback
+                publisher, counters, futuresHandler, loApiClient, loProperties, apiFutureCallback
         );
     }
 
@@ -103,8 +99,7 @@ class PubSubMessageSenderTest {
         futuresHandler = mock(ApiFuturesCallbackHandler.class);
 
         pubSubMessageSender = new PubSubMessageSender(
-                publisher, counters, futuresHandler, loApiClient, loProperties,
-                connectorHealthActuatorEndpoint, apiFutureCallback
+                publisher, counters, futuresHandler, loApiClient, loProperties, apiFutureCallback
         );
 
         // when
