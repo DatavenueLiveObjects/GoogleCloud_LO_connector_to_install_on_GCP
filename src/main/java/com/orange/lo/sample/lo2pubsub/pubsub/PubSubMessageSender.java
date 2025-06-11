@@ -35,7 +35,6 @@ public class PubSubMessageSender {
     private final ApiFuturesCallbackSupport apiFuturesCallbackSupport;
     private final LOApiClient loApiClient;
     private final LoProperties loProperties;
-    private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
     private final CheckConnectionApiFutureCallbackImpl checkConnectionApiFutureCallback;
 
 
@@ -45,7 +44,6 @@ public class PubSubMessageSender {
             ApiFuturesCallbackSupport apiFuturesCallbackSupport,
             LOApiClient loApiClient,
             LoProperties loProperties,
-            ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint,
             CheckConnectionApiFutureCallbackImpl apiFutureCallback
     ) {
         this.publisher = publisher;
@@ -53,7 +51,6 @@ public class PubSubMessageSender {
         this.apiFuturesCallbackSupport = apiFuturesCallbackSupport;
         this.loApiClient = loApiClient;
         this.loProperties = loProperties;
-        this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
         this.checkConnectionApiFutureCallback = apiFutureCallback;
     }
 
@@ -77,7 +74,7 @@ public class PubSubMessageSender {
                 LOGGER.error("Unable to publish message ", throwable);
                 counters.getMesasageSentFailedCounter().increment();
                 loApiClient.getDataManagementFifo().sendAck(message.getMessageId(), loProperties.getMessageQos());
-                connectorHealthActuatorEndpoint.setCloudConnectionStatus(false);
+                counters.setCloudConnectionStatus(false);
                 LOGGER.error("Problem with connection. Check GCP credentials. ", throwable);
             }
 
@@ -86,7 +83,7 @@ public class PubSubMessageSender {
                 LOGGER.debug("Message {} published", messageId);
                 counters.getMesasageSentCounter().increment();
                 loApiClient.getDataManagementFifo().sendAck(message.getMessageId(), loProperties.getMessageQos());
-                connectorHealthActuatorEndpoint.setCloudConnectionStatus(true);
+                counters.setCloudConnectionStatus(true);
             }
         });
 

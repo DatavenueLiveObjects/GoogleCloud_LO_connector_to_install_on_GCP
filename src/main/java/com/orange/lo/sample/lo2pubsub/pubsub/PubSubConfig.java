@@ -13,7 +13,7 @@ import com.google.api.gax.retrying.RetrySettings;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.TopicName;
-import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
+import com.orange.lo.sample.lo2pubsub.utils.Counters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -31,11 +31,11 @@ public class PubSubConfig {
 
     private final PubSubProperties pubSubProperties;
 
-    private final ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+    private final Counters counters;
 
-    public PubSubConfig(PubSubProperties pubSubProperties, ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint) {
+    public PubSubConfig(PubSubProperties pubSubProperties, Counters counters) {
         this.pubSubProperties = pubSubProperties;
-        this.connectorHealthActuatorEndpoint = connectorHealthActuatorEndpoint;
+        this.counters = counters;
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class PubSubConfig {
             googleCredentials = getCredentials();
         } catch (IOException e) {
             LOG.error("Problem with connection. Check GCP credentials. ", e);
-            connectorHealthActuatorEndpoint.setCloudConnectionStatus(false);
+            counters.setCloudConnectionStatus(false);
         }
 
         BatchingSettings batchingSettings = getBatchSettings();

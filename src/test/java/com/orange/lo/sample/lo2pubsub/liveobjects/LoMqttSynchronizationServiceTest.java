@@ -9,6 +9,7 @@ package com.orange.lo.sample.lo2pubsub.liveobjects;
 
 import com.orange.lo.sample.lo2pubsub.pubsub.PubSubMessageSender;
 import com.orange.lo.sample.lo2pubsub.utils.ConnectorHealthActuatorEndpoint;
+import com.orange.lo.sample.lo2pubsub.utils.Counters;
 import com.orange.lo.sdk.LOApiClient;
 import com.orange.lo.sdk.fifomqtt.DataManagementFifo;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ class LoMqttSynchronizationServiceTest {
     private ThreadPoolExecutor threadPoolExecutor;
 
     @Mock
-    private ConnectorHealthActuatorEndpoint connectorHealthActuatorEndpoint;
+    private Counters counters;
 
     private LoMqttSynchronizationService service;
 
@@ -60,7 +61,7 @@ class LoMqttSynchronizationServiceTest {
 
     private void prepareService(Queue<LoMessage> messageQueue) {
         service = new LoMqttSynchronizationService(
-                loApiClient, pubSubMessageSender, messageQueue, properties, threadPoolExecutor, connectorHealthActuatorEndpoint
+                loApiClient, pubSubMessageSender, messageQueue, properties, threadPoolExecutor, counters
         );
     }
 

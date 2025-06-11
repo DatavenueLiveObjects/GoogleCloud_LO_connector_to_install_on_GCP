@@ -11,6 +11,7 @@ import com.orange.lo.sdk.LOApiClient;
 import com.orange.lo.sdk.LOApiClientParameters;
 import com.orange.lo.sdk.fifomqtt.DataManagementFifoCallback;
 
+import com.orange.lo.sdk.mqtt.DataManagementReconnectCallback;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.slf4j.Logger;
@@ -35,11 +36,13 @@ public class LoConfig {
     private final LoProperties loProperties;
     private final LOApiClientFactory loApiClientFactory;
     private final DataManagementFifoCallback dataManagementFifoCallback;
+    private final DataManagementReconnectCallback reconnectHandler;
 
-    public LoConfig(LoProperties loProperties, DataManagementFifoCallback dataManagementFifoCallback, LOApiClientFactory loApiClientFactory) {
+    public LoConfig(LoProperties loProperties, DataManagementFifoCallback dataManagementFifoCallback, LOApiClientFactory loApiClientFactory, DataManagementReconnectCallback reconnectHandler) {
         this.loProperties = loProperties;
         this.dataManagementFifoCallback = dataManagementFifoCallback;
         this.loApiClientFactory = loApiClientFactory;
+        this.reconnectHandler = reconnectHandler;
     }
 
     @Bean
@@ -93,6 +96,7 @@ public class LoConfig {
 
         builder.connectorType(loProperties.getConnectorType());
         builder.connectorVersion(getConnectorVersion());
+        builder.dataManagementReconnectCallback(reconnectHandler);
         
         return builder.build();
     }

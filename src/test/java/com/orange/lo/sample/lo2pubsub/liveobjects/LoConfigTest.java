@@ -10,6 +10,7 @@ package com.orange.lo.sample.lo2pubsub.liveobjects;
 
 import com.orange.lo.sdk.LOApiClientParameters;
 import com.orange.lo.sdk.fifomqtt.DataManagementFifoCallback;
+import com.orange.lo.sdk.mqtt.DataManagementReconnectCallback;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -39,13 +40,16 @@ class LoConfigTest {
     @Mock
     private LoProperties properties;
 
+    @Mock
+    private DataManagementReconnectCallback reconnectCallback;
+
     @Captor
     private ArgumentCaptor<LOApiClientParameters> clientParametersCaptor;
 
     @Test
     void shouldCreateLoApiClientBasedOnLoPropertiesWithDefaultValues() {
         // given
-        LoConfig loConfig = new LoConfig(getMinimumLoProperties(), dataManagementFifoCallback, loApiClientFactory);
+        LoConfig loConfig = new LoConfig(getMinimumLoProperties(), dataManagementFifoCallback, loApiClientFactory, reconnectCallback);
 
         // when
         loConfig.loApiClient();
@@ -67,7 +71,7 @@ class LoConfigTest {
     @Test
     void shouldThrowExceptionOnLoApiClientIfPropertiesHasNoTopic() {
         // given
-        LoConfig loConfig = new LoConfig(properties, dataManagementFifoCallback, loApiClientFactory);
+        LoConfig loConfig = new LoConfig(properties, dataManagementFifoCallback, loApiClientFactory, reconnectCallback);
 
         // when / then
         assertThrows(IllegalArgumentException.class, loConfig::loApiClient);
@@ -77,7 +81,7 @@ class LoConfigTest {
     void shouldCreateLoApiClientBasedOnProvidedLoProperties() {
         // given
         LoProperties customizedLoProperties = getCustomizedLoProperties();
-        LoConfig loConfig = new LoConfig(customizedLoProperties, dataManagementFifoCallback, loApiClientFactory);
+        LoConfig loConfig = new LoConfig(customizedLoProperties, dataManagementFifoCallback, loApiClientFactory, reconnectCallback);
 
         // when
         loConfig.loApiClient();
